@@ -1,46 +1,54 @@
+import { Box, Button, IconButton, Typography } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { IconButton, Box, Typography, Button, Tabs, Tab } from "@mui/material";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import Item from "../../components/Item";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { shades } from "../../theme";
 import { addToCart } from "../../state";
-import { useParams } from "react-router-dom";
-import Item from '../../components/Item';
+import { useDispatch } from "react-redux";
 
 const ItemDetails = () => {
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
   const { itemId } = useParams();
   const [value, setValue] = useState("description");
   const [count, setCount] = useState(1);
   const [item, setItem] = useState(null);
   const [items, setItems] = useState([]);
 
-  const handleChange = (e, newValue) => {
-    e.preventDefault();
+  const handleChange = (event, newValue) => {
     setValue(newValue);
-  }
+  };
 
   async function getItem() {
-    const item = await fetch(`http://localhost:1337/api/items/${itemId}?populate=image`, { method: 'GET' });
+    const item = await fetch(
+      `http://localhost:1337/api/items/${itemId}?populate=image`,
+      {
+        method: "GET",
+      }
+    );
     const itemJson = await item.json();
     setItem(itemJson.data);
   }
 
   async function getItems() {
-        const items = await fetch(
-        "http://localhost:1337/api/items?populate=image",
-        { method: "GET" }
-        );
-        const itemsJson = await items.json();
-        setItems(itemsJson.data);
+    const items = await fetch(
+      `http://localhost:1337/api/items?populate=image`,
+      {
+        method: "GET",
+      }
+    );
+    const itemsJson = await items.json();
+    setItems(itemsJson.data);
   }
 
   useEffect(() => {
     getItem();
     getItems();
-  }, [itemId]) //eslint-disable-line react-hooks/exhaustive-deps
+  }, [itemId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box width="80%" m="80px auto">
@@ -102,7 +110,7 @@ const ItemDetails = () => {
           </Box>
           <Box>
             <Box m="20px 0 5px 0" display="flex">
-              <FavoriteBorderIcon />
+              <FavoriteBorderOutlinedIcon />
               <Typography sx={{ ml: "5px" }}>ADD TO WISHLIST</Typography>
             </Box>
             <Typography>CATEGORIES: {item?.attributes?.category}</Typography>
@@ -142,7 +150,7 @@ const ItemDetails = () => {
         </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default ItemDetails
+export default ItemDetails;
